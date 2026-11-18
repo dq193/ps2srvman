@@ -24,7 +24,8 @@ handle_art() (
         -o "$cov_tmp"
     case $ART_SOURCE in
         xlenore)
-            url="$XLENORE_URL_BASE/$id.jpg"
+            xlenore_id="$(echo "$id" | awk -F'[_.]' '{ print $1 "-" $2 $3 }')"
+            url="$XLENORE_URL_BASE/$xlenore_id.jpg"
             ;;
         oplm)
             url="$OPLM_URL_BASE/PS2%2F${id}%2F${id}_COV.png"
@@ -42,7 +43,12 @@ handle_art() (
         200)
             case $ART_SOURCE in
                 xlenore)
-                    "$MAGICK" "$cov_tmp" "$cov_file" || {
+                    # Convert to the same image format as OPLM
+                    "$MAGICK" -quiet "$cov_tmp" \
+                        -strip                  \
+                        -resize '140x200!'      \
+                        -colors 256             \
+                        "PNG8:$cov_file" || {
                         log_err "Failed to convert xlenore JPG cover to PNG file"
                         return 1
                     }
