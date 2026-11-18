@@ -51,17 +51,40 @@ WantedBy=multi-user.target
 
 The procedure for updating is identical, just make sure your cloned repo is up-to-date with the master branch. Your systemd service will never be overwritten after an update.
 
-### VMC Stuff
+### VMC stuff
 
 [sync-on-luma](https://github.com/sync-on-luma)'s repo for the [XEB+ Neutrino Loader Plugin](https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin) contains a comprehensive list of game IDs whose save data can affect other games when in the same memory card. This project fetches that data from [here](https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin/blob/main/List%20Builder/vmc_groups.list) to handle all these groups correctly. That means that any game not in this list will get its own memory card that will share its ID (`<ID>.bin`) while a game belonging to a group will use that group's ID for the card name (`<XEBP ID>.bin`). For more info, see their repo's [wiki page on memory card groups](https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin/wiki/Memory-Card-Groups).
 
-Since each PS2 game loader frontend uses its own config format, I've attempted to handle a few on a case-by-case basis. For example, if you're using NHDDL then you'll need to create the `nhddl/` directory at the root of your PS2 directory. Then once you add, say, `Ico.iso` (`SCUS_971.13`) to the `CD/` directory, a corresponding `nhddl/Ico.yaml` file will be made containing only:
+Since each PS2 game loader frontend uses its own config format, I've attempted to handle a few on a case-by-case basis. For example for NHDDL, when once you add, say, `Ico.iso` (`SCUS_971.13`) to the `CD/` directory, a corresponding `nhddl/Ico.yaml` file will be made containing only:
 ```yaml
 mc0: /VMC/XEBP_100.07.bin
 ```
 If you already had a file there but no code for VMCs, it will add this line without interfering with anything else. If you already had a file that specifically disables VMCs or contains some other path for one, it will not touch the file at all.
 
-Currently, I've only implemented support for NHDDL. This should increase in the future. See [here](#help-me-out) for how to help add your favourite frontend to the supported list.
+You can choose which frontends to support by modifying the `VMC_FRONTENDS` variable with a comma separated list. By default, it handles all supported frontends (i.e. `VMC_FRONTENDS=NHDDL,LAUNCHSTATION`). Expand the entries below to see more about supported frontends.
+
+<details>
+    <summary>NHDDL</summary>
+
+When you add a game e.g. `<GAME>.iso`, a config file will be created or modified at `nhddl/<GAME>.yaml`, with the following line being appended:
+```yaml
+mc0: /VMC/<VMC ID>.bin
+```
+If you want to disable this for an existing config, define `mc0` to some other path or disable it by adding a `$` at the start of the line. See [here](https://github.com/pcm720/nhddl#argument-files) for general syntax.
+</details>
+<details>
+    <summary>Launchstation</summary>
+
+When you add a game, a config file will be created or modified at `CFG/NEUT-<ID>.cfg`, with the following line being inserted:
+```
+$VMC_0=<VMC ID>
+```
+If you want to disable this for an existing config, define `$VMC_0` to some other non-empty path or add a `#` at the start of the line like so to indicate no VMC is being used:
+```
+#$VMC_0:
+```
+See [here](https://github.com/NathanNeurotic/Launchstation/blob/master/docs/NEUTRINO_GAME_CONFIG.md) for general syntax.
+</details>
 
 ### Art stuff
 

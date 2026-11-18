@@ -3,3 +3,9 @@
 
 # xlenore or oplm
 : "${ART_SOURCE:=xlenore}"
+
+: "${VMC_FRONTENDS:=NHDDL,LAUNCHSTATION}"
+
+# These are based on $PS2_DIR and cannot be set beforehand
+ART_DIR="$PS2_DIR/ART"
+VMC_DIR="$PS2_DIR/VMC"

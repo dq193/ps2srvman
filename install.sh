@@ -4,7 +4,7 @@ set -u
 # RUN AS ROOT
 
 : "${INSTALL_DIR:=/usr/local/lib/ps2srvman}"
-mkdir -p "$INSTALL_DIR"
+mkdir -p "$INSTALL_DIR" || exit 1
 
 cd "$(dirname "$0")" || exit 1
 
@@ -13,6 +13,14 @@ install                                          \
     -m 644                                       \
     -t "$INSTALL_DIR"                            \
     art.sh binaries.sh defaults.sh log.sh vmc.sh \
+    || exit 1
+
+mkdir -p "$INSTALL_DIR/frontends"
+install                         \
+    -v                          \
+    -m 644                      \
+    -t "$INSTALL_DIR/frontends" \
+    frontends/*.sh              \
     || exit 1
 
 install                   \

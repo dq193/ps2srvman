@@ -3,13 +3,15 @@ dir="$(dirname "$0")"
 . "$dir/binaries.sh"
 . "$dir/defaults.sh"
 
-ART_DIR="$PS2_DIR/ART"
 XLENORE_URL_BASE="https://raw.githubusercontent.com/xlenore/ps2-covers/main/covers/default"
 OPLM_URL_BASE="https://archive.org/download/OPLM_ART_2024_09/OPLM_ART_2024_09.zip"
 
 handle_art() (
     trap 'exit 1' HUP INT QUIT TERM
-    mkdir -p "$ART_DIR"
+    mkdir -p "$ART_DIR" || {
+        log_err "Failed to create ART directory"
+        return 1
+    }
 
     id="$1"
     cov_file="$ART_DIR/${id}_COV.png"
