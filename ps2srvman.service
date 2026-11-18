@@ -1,0 +1,16 @@
+[Unit]
+Description=ART and VMC Manager for a PS2 network share
+After=network-online.target
+Wants=network-online.target
+# Make sure to require any mountpoints to be present here too
+
+[Service]
+Type=simple
+# Remove/replace the line below if not using /var/lib/
+StateDirectory=ps2srvman
+ExecStart=/usr/local/lib/ps2srvman/watch.sh
+Restart=on-failure
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
