@@ -24,6 +24,30 @@ This is obviously most useful for UDPFS/SMB shares on Linux servers, where it's 
 
 Clone this repo, modify `ps2srvman.service` to your needs, then run `install.sh`.
 
+Modifying the systemd service is pretty important, especially if you already had a server setup from beforehand. Here's my custom config for my own setup, as an example:
+
+```
+[Unit]
+Description=ART and VMC Manager for a PS2 network share
+After=network-online.target zfs-mount.service
+Wants=network-online.target
+Requires=zfs-mount.service
+ConditionPathExists=/srv/data/ps2
+
+[Service]
+Type=simple
+User=ps2
+Group=ps2
+StateDirectory=ps2srvman
+Environment=PS2_DIR=/srv/data/ps2
+ExecStart=/usr/local/lib/ps2srvman/watch.sh
+Restart=on-failure
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ### VMC Stuff
 
 [sync-on-luma](https://github.com/sync-on-luma)'s repo for the [XEB+ Neutrino Loader Plugin](https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin) contains a comprehensive list of game IDs whose save data can affect other games when in the same memory card. This project fetches that data from [here](https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin/blob/main/List%20Builder/vmc_groups.list) to handle all these groups correctly. That means that any game not in this list will get its own memory card that will share its ID (`<ID>.bin`) while a game belonging to a group will use that group's ID for the card name (`<XEBP ID>.bin`). For more info, see their repo's [wiki page on memory card groups](https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin/wiki/Memory-Card-Groups).
