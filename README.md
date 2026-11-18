@@ -38,6 +38,7 @@ ConditionPathExists=/srv/data/ps2
 Type=simple
 User=ps2
 Group=ps2
+UMask=0002
 StateDirectory=ps2srvman
 Environment=PS2_DIR=/srv/data/ps2
 ExecStart=/usr/local/lib/ps2srvman/watch.sh
@@ -47,6 +48,8 @@ RestartSec=3s
 [Install]
 WantedBy=multi-user.target
 ```
+
+The procedure for updating is identical, just make sure your cloned repo is up-to-date with the master branch. Your systemd service will never be overwritten after an update.
 
 ### VMC Stuff
 
@@ -64,7 +67,7 @@ Currently, I've only implemented support for NHDDL. This should increase in the 
 
 The `ART_SOURCE` variable dictates from where the script will fetch game covers:
 
-- `xlenore`: The script will fetch cover art from the [`xlenore/ps2-covers`](https://github.com/xlenore/ps2-covers) repository. Most frontends expect a PNG image and the repo provides a JPG, so you'll need `magick` to convert it (see [dependencies](#dependencies)).
+- `xlenore`: The script will fetch cover art from the [`xlenore/ps2-covers`](https://github.com/xlenore/ps2-covers) repository. Most frontends expect a PNG image and the repo provides a JPG (that's way too high-res anyways), so you'll need `magick` to convert it (see [dependencies](#dependencies)).
 - `oplm`: The script will fetch cover art from OPL Manager's [latest art database](https://archive.org/details/OPLM_ART_2024_09) hosted on internet archive. Unlike xlenore's repo, this contains more than just the front cover for games, but I have yet to implement downloading those.
 
 ### Dependencies
@@ -73,7 +76,7 @@ The `ART_SOURCE` variable dictates from where the script will fetch game covers:
 - `bsdtar` is needed to extract the game ID from an ISO.
 - `curl` is needed to fetch the latest VMC group list and cover art for games.
 - `magick` is needed when using [`xlenore/ps2-covers`](https://github.com/xlenore/ps2-covers) as the art source, since it holds JPGs which need to be converted to PNGs. It is not necessary when using OPLM's ART DB.
-- `inotifywait` from `inotify-tools` is needed to actually check when a new file is added.
+- `inotifywait` from `inotify-tools` is needed to actually check when a new file is added. It's not necessary if you plan to only [manually run the script](#running-manually) or [have found a different way to automate it](#working-with-non-systemd-and-non-linux-machines).
 - For parsing and bookkeeping, `mktemp`, `sed`, `awk` and `grep` are also used.
 
 By default, it is assumed that these commands all lie within your `PATH`. If that's not the case, define the `MKFS_PS2`, `BSDTAR`, `CURL`, `MAGICK` and `INOTIFYWAIT` variables to each command's absolute path. The rest of the commands must be in your `PATH`, and are not specifically checked for. Stuff might break if you somehow lack them.
@@ -84,6 +87,10 @@ You'll probably want to change these variables as well:
 
 - `DATA_DIR` (default `/var/lib/ps2srvman`): All internal files and bookkeeping that the script needs go here.
 - `PS2_DIR` (default `/srv/ps2`): The absolute path of the PS2 directory on your machine.
+
+### Running manually
+
+The main script, `ps2srvman.sh`, is also pretty useful if it's just run on its own. You'll still need to make the relevant directories and have the righ permissions beforehand, but simply running `ps2srvman.sh` after that will automatically populate the `VMC/` and `ART/` (and frontend config stuff) while not touching any art or configs you've already made for existing ISOs.
 
 ### Working with non-systemd and non-Linux machines
 
