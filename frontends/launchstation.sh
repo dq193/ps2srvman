@@ -12,12 +12,13 @@ handle_launchstation() (
         return 1
     }
 
-    # Unless file exists and $VMC_0 is present and non-empty or not commented
-    # out, we'll add the VMC
+    # VMCs will be handled unless:
+    # - $VMC_0 is defined and non-empty
+    # - There is a line starting with '#NO_VMC'
     cfg_file="$LAUNCHSTATION_DIR/NEUT-$id.cfg"
     {
         [ -f "$cfg_file" ] &&
-        grep -Eq '^(#.*\$VMC_0|\$VMC_0=[^[:space:]]+)' "$cfg_file"
+        grep -Eq '^(#NO_VMC|\$VMC_0=[^[:space:]]+)' "$cfg_file"
     } && return 0
 
     tmp_cfg="$(mktemp)"
