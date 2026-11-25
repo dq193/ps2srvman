@@ -79,9 +79,9 @@ When you add a game, a config file will be created or modified at `CFG/NEUT-<ID>
 ```
 $VMC_0=<VMC ID>
 ```
-If you want to disable this for an existing config, define `$VMC_0` to some other non-empty path or add a `#` at the start of the line like so to indicate no VMC is being used:
+If you want to disable this for an existing config, define `$VMC_0` to some other non-empty path or insert the following line anywhere in your config:
 ```
-#$VMC_0:
+#NO_VMC
 ```
 See [here](https://github.com/NathanNeurotic/Launchstation/blob/master/docs/NEUTRINO_GAME_CONFIG.md) for general syntax.
 </details>
