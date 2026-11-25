@@ -17,7 +17,7 @@ command -v "$INOTIFYWAIT" >/dev/null 2>&1 || {
 
 mkdir -p "$PS2_DIR/CD" "$PS2_DIR/DVD" || exit 1
 
-inotifywait                          \
+"$INOTIFYWAIT"                       \
     -m -q                            \
     --includei '\.iso$'              \
     -e close_write -e moved_to       \
