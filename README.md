@@ -10,10 +10,10 @@ This is a Linux-only PS2 directory manager that takes care of managing virtual m
 │   └── [Put your DVD ISOs here]
 ├── ART
 │   └── [Cover art for games, stored as <ID>_COV.png]
-├─ VMC
+├── VMC
 │   ├── [Individual game VMCs, e.g. SLUS_211.34.bin]
-│   └── [Group VMCs, e.g. XEBP_100.15]
-└─ [Frontend-specific config directories]...
+│   └── [Group VMCs, e.g. XEBP_100.15.bin]
+└── [Frontend-specific config directories]...
 ```
 
 Assuming everything works fine, you will not need to touch the ART and VMC directories at all unless you want to manually override some behavior.
@@ -123,6 +123,7 @@ If you replace `watch.sh` and the systemd unit then you can pretty easily get th
 
 - Support for other art assets provided by OPLM but not xlenore's repo
 - Handling config files for more game launchers
+- Better handling other changes to `CD/` and `DVD/` directories like renaming/deletion
 - Maybe cheats? But I have no experience with that and don't use cheats, let me know if that's something you want.
 
 ### Help me out
