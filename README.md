@@ -22,7 +22,7 @@ This is obviously most useful for UDPFS/SMB shares on Linux servers, where it's 
 
 ### Install
 
-Clone this repo, modify `ps2srvman.service` to your needs, then run `install.sh`.
+Clone this repo, modify `ps2srvman.service` to your needs, then run `install.sh` **as root**.
 
 Modifying the systemd service is pretty important, especially if you already had a server setup from beforehand. Here's my custom config for my own setup, as an example:
 
@@ -110,6 +110,7 @@ You'll probably want to change these variables as well:
 
 - `DATA_DIR` (default `/var/lib/ps2srvman`): All internal files and bookkeeping that the script needs go here.
 - `PS2_DIR` (default `/srv/ps2`): The absolute path of the PS2 directory on your machine.
+- `INSTALL_DIR` (default `/usr/local/lib/ps2srvman`): All shell scripts get installed here. Also remember to change `ps2srvman.service` accordingly.
 
 ### Running manually
 
