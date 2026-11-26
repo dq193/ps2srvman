@@ -106,7 +106,7 @@ Previously, I included the option to choose from two different art sources, each
 - `bsdtar` is needed to extract the game ID from an ISO.
 - `curl` is needed to fetch the latest VMC group list and cover art for games.
 - `inotifywait` from `inotify-tools` is needed to actually check when a new file is added. It's not necessary if you plan to only [manually run the script](#running-manually) or [have found a different way to automate it](#working-with-non-systemd-and-non-linux-machines).
-- For parsing and bookkeeping, `mktemp`, `sed`, `awk` and `grep` are also used.
+- For parsing and bookkeeping, `sed`, `awk` and `grep` are also used.
 
 By default, it is assumed that these commands all lie within your `PATH`. If that's not the case, define the `MKFS_PS2`, `BSDTAR`, `CURL` and `INOTIFYWAIT` variables to each command's absolute path. The rest of the commands must be in your `PATH`, and are not specifically checked for. Stuff might break if you somehow lack them.
 

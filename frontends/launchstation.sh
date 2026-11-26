@@ -2,6 +2,8 @@ dir="$(dirname "$0")"
 . "$dir/log.sh"
 . "$dir/defaults.sh"
 
+LAUNCHSTATION_DIR="$PS2_DIR/CFG"
+
 handle_launchstation() (
     trap 'exit 1' HUP INT QUIT TERM
     id="$1"
@@ -21,15 +23,21 @@ handle_launchstation() (
         grep -Eq '^(#NO_VMC|\$VMC_0=[^[:space:]]+)' "$cfg_file"
     } && return 0
 
-    tmp_cfg="$(mktemp)"
+    tmp_cfg="$cfg_file.launchstation.tmp"
     trap 'rm -f "$tmp_cfg"' EXIT
+
     {
-        [ -f "$cfg_file" ] && sed '/^$VMC_0\|^$End/d' "$cfg_file"
-        echo "\$VMC_0=$vmc_id"
+        [ ! -f "$cfg_file" ] || sed '/^$VMC_0\|^$End/d' "$cfg_file" &&
+        echo "\$VMC_0=$vmc_id" &&
         echo "\$End=1"
-    } > "$tmp_cfg"
-    { mv "$tmp_cfg" "$cfg_file" && chmod 644 "$cfg_file"; } || {
-        log_err "Failed to write Launchstation conf file for $id"
+    } > "$tmp_cfg" || {
+        log_err "Failed to write Launchstation conf for $id"
         return 1
     }
+    mv "$tmp_cfg" "$cfg_file" || {
+        log_err "Failed to save $cfg_file"
+        return 1
+    }
+
+    return 0
 )

@@ -12,8 +12,6 @@ VMC_GROUP_LIST_BUF_FILE="$VMC_GROUP_LIST_FILE.buf"
 VMC_GROUP_LIST_HDR_FILE="$VMC_GROUP_LIST_FILE.header"
 VMC_GROUP_LIST_ETAG_FILE="$VMC_GROUP_LIST_FILE.etag"
 
-LAUNCHSTATION_DIR="$PS2_DIR/CFG"
-
 _fetch_vmc_group_list() (
     curr_etag="$(cat "$VMC_GROUP_LIST_ETAG_FILE" 2>/dev/null)"
     [ -f "$VMC_GROUP_LIST_FILE" ] || curr_etag=""
