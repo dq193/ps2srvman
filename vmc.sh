@@ -85,7 +85,13 @@ handle_vmc() (
 
     vmc_id="$(_get_vmc_id "$id")" || return 1
     vmc_file="$VMC_DIR/$vmc_id.bin"
-    [ -f "$vmc_file" ] || "$MKFS_PS2" -o "$vmc_file" -s 8 || {
+    case "$vmc_id" in
+        # These groups have a lot of games so bigger cards are needed for them
+        XEBP_100.24|XEBP_100.40) vmc_size_m=32 ;;
+        *)                       vmc_size_m=8  ;;
+    esac
+
+    [ -f "$vmc_file" ] || "$MKFS_PS2" -o "$vmc_file" -s "$vmc_size_m" || {
         rm -f "$vmc_file"
         log_err "Failed to make VMC file $vmc_file"
         return 1
