@@ -77,7 +77,6 @@ _get_vmc_id() (
 )
 
 handle_vmc() (
-    trap 'exit 1' HUP INT QUIT TERM
     mkdir -p "$VMC_DIR" || {
         log_err "Failed to create VMC directory"
         return 1
