@@ -3,71 +3,60 @@ dir="$(dirname "$0")"
 . "$dir/binaries.sh"
 . "$dir/defaults.sh"
 
-XLENORE_URL_BASE="https://raw.githubusercontent.com/xlenore/ps2-covers/main/covers/default"
-OPLM_URL_BASE="https://archive.org/download/OPLM_ART_2024_09/OPLM_ART_2024_09.zip"
+DB_URL_BASE='https://raw.githubusercontent.com/Luden02/psx-ps2-opl-art-database/main/PS2'
 
 handle_art() (
-    trap 'exit 1' HUP INT QUIT TERM
+    id="$1"
+
     mkdir -p "$ART_DIR" || {
         log_err "Failed to create ART directory"
         return 1
     }
 
-    id="$1"
-    cov_file="$ART_DIR/${id}_COV.png"
-    [ -f "$cov_file" ] && return 0
-    cov_tmp="$(mktemp)"
-    trap 'rm -rf "$cov_tmp"' EXIT
+    dest_prefix="$ART_DIR/${id}_"
+    url_prefix="$DB_URL_BASE/$id/${id}_"
 
-    # set args for curl
-    set --                \
-        -sSL              \
-        -w '%{http_code}' \
-        -o "$cov_tmp"
-    case $ART_SOURCE in
-        xlenore)
-            xlenore_id="$(echo "$id" | awk -F'[_.]' '{ print $1 "-" $2 $3 }')"
-            url="$XLENORE_URL_BASE/$xlenore_id.jpg"
-            ;;
-        oplm)
-            url="$OPLM_URL_BASE/PS2%2F${id}%2F${id}_COV.png"
-            ;;
-        *)
-            log_err "Unsupported art source '$ART_SOURCE'"
-            return 1
-            ;;
-    esac
-
-    code="$("$CURL" "$@" "$url")"
-    case $code in
-        404|503) # Why does IA throw 503 when the file doesn't exist?
-            ;;
-        200)
-            case $ART_SOURCE in
-                xlenore)
-                    # Convert to the same image format as OPLM
-                    "$MAGICK" -quiet "$cov_tmp" \
-                        -strip                  \
-                        -resize '140x200!'      \
-                        -colors 256             \
-                        "PNG8:$cov_file" || {
-                        log_err "Failed to convert xlenore JPG cover to PNG file"
-                        return 1
-                    }
-                    ;;
-                oplm)
-                    { mv "$cov_tmp" "$cov_file" && chmod 644 "$cov_file"; } || {
-                        log_err "Failed to move downloaded cover to destination"
-                        return 1
-                    }
-                    ;;
-            esac
-            ;;
-        *)
-            log_err "Failed to fetch cover art for $id"
-            return 1
-            ;;
-    esac
+    # Each line has the dest file on the left and URL on the right
+    set --                                                 \
+        "${dest_prefix}COV.png"  "${url_prefix}COV.png"    \
+        "${dest_prefix}COV2.png" "${url_prefix}COV2.png"   \
+        "${dest_prefix}ICO.png"  "${url_prefix}ICO.png"    \
+        "${dest_prefix}LAB.png"  "${url_prefix}LAB.png"    \
+        "${dest_prefix}LGO.png"  "${url_prefix}LGO.png"    \
+        "${dest_prefix}BG.png"   "${url_prefix}BG_00.png"  \
+        "${dest_prefix}SCR0.png" "${url_prefix}SCR_00.png" \
+        "${dest_prefix}SCR1.png" "${url_prefix}SCR_01.png"
     
-    return 0
+    failed=0
+    while [ $# -gt 0 ]; do
+        dest="$1" url="$2"
+        shift 2
+        [ -f "$dest" ] && continue
+
+        tmp="$dest.tmp"
+        code="$("$CURL"                         \
+            -sSL                                \
+            --connect-timeout 15 --max-time 120 \
+            -w '%{http_code}'                   \
+            -o "$tmp"                           \
+            "$url")" || code=000
+        case "$code" in
+            404)
+                ;;
+            200)
+                mv "$tmp" "$dest" || {
+                    log_err "Failed to save $dest"
+                    failed=1
+                }
+                ;;
+            *)
+                log_err "Failed to fetch $url for $id (got HTTP $code)"
+                failed=1
+                ;;
+        esac
+
+        rm -f "$tmp"
+    done
+
+    return "$failed"
 )
