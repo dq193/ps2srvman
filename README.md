@@ -88,7 +88,7 @@ See [here](https://github.com/NathanNeurotic/Launchstation/blob/master/docs/NEUT
 
 ### Art stuff
 
-Game art is fetched from [Luden](http://github.com/Luden02)'s GitHub mirror of [OPL Manager](https://oplmanager.com/)'s [latest art database](https://archive.org/details/OPLM_ART_2024_09) hosted on the internet archive. For any game, the following files will be created if they do not already exist and the source URL exists in the DB:
+Game art is fetched from [Luden](http://github.com/Luden02)'s [GitHub mirror](https://github.com/Luden02/psx-ps2-opl-art-database) of [OPL Manager](https://oplmanager.com/)'s [latest art database](https://archive.org/details/OPLM_ART_2024_09) hosted on the internet archive. For any game, the following files will be created if they do not already exist and the source URL exists in the DB:
   - `<ID>_COV.png`
   - `<ID>_COV2.png`
   - `<ID>_ICO.png`
