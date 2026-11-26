@@ -32,5 +32,5 @@ iso="$1"
 id="$(get_game_id "$iso")" || exit 1
 name="$(basename "${iso%.*}")"
 
-handle_vmc "$id" "$name" || exit 1
-handle_art "$id" || exit 1
+[ "$HANDLE_VMC" -eq 1 ] && handle_vmc "$id" "$name"
+[ "$HANDLE_ART" -eq 1 ] && handle_art "$id"

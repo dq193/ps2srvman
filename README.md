@@ -86,6 +86,8 @@ If you want to disable this for an existing config, define `$VMC_0` to some othe
 See [here](https://github.com/NathanNeurotic/Launchstation/blob/master/docs/NEUTRINO_GAME_CONFIG.md) for general syntax.
 </details>
 
+To disable any handling of VMCs altogether, set `HANDLE_VMC=0`.
+
 ### Art stuff
 
 Game art is fetched from [Luden](http://github.com/Luden02)'s [GitHub mirror](https://github.com/Luden02/psx-ps2-opl-art-database) of [OPL Manager](https://oplmanager.com/)'s [latest art database](https://archive.org/details/OPLM_ART_2024_09) hosted on the internet archive. For any game, the following files will be created if they do not already exist and the source URL exists in the DB:
@@ -99,6 +101,8 @@ Game art is fetched from [Luden](http://github.com/Luden02)'s [GitHub mirror](ht
   - `<ID>_SCR1.png` (obtained from `<ID>_SCR_01.png` in the DB)
 
 Previously, I included the option to choose from two different art sources, each with their own shortcomings, and allowed users to choose which they wanted through a variable. I have since removed this feature because this new source I've found seems to be the best and suits all needs.
+
+To disable any handling of art altogether, set `HANDLE_ART=0`.
 
 ### Dependencies
 
