@@ -8,7 +8,6 @@ dir="$(dirname "$0")"
 : "${BSDTAR:=bsdtar}"
 : "${CURL:=curl}"
 : "${MKFS_PS2:=mkfs.ps2}"
-: "${MAGICK:=magick}"
 : "${INOTIFYWAIT:=inotifywait}"
 
 handle_binaries() (
@@ -22,10 +21,6 @@ handle_binaries() (
     }
     command -v "$CURL" >/dev/null 2>&1 || {
         log_err "curl binary not found"
-        return 1
-    }
-    [ "$ART_SOURCE" = "xlenore" ] && ! command -v "$MAGICK" >/dev/null 2>&1 && {
-        log_err "magick binary not found (needed when source is xlenore)"
         return 1
     }
     

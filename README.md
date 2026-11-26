@@ -88,21 +88,27 @@ See [here](https://github.com/NathanNeurotic/Launchstation/blob/master/docs/NEUT
 
 ### Art stuff
 
-The `ART_SOURCE` variable dictates from where the script will fetch game covers:
+Game art is fetched from [Luden](http://github.com/Luden02)'s [GitHub mirror](https://github.com/Luden02/psx-ps2-opl-art-database) of [OPL Manager](https://oplmanager.com/)'s [latest art database](https://archive.org/details/OPLM_ART_2024_09) hosted on the internet archive. For any game, the following files will be created if they do not already exist and the source URL exists in the DB:
+  - `<ID>_COV.png`
+  - `<ID>_COV2.png`
+  - `<ID>_ICO.png`
+  - `<ID>_LAB.png`
+  - `<ID>_LGO.png`
+  - `<ID>_BG.png` (obtained from `<ID>_BG_00.png` in the DB)
+  - `<ID>_SCR0.png` (obtained from `<ID>_SCR_00.png` in the DB)
+  - `<ID>_SCR1.png` (obtained from `<ID>_SCR_01.png` in the DB)
 
-- `xlenore`: The script will fetch cover art from the [`xlenore/ps2-covers`](https://github.com/xlenore/ps2-covers) repository. Most frontends expect a PNG image and the repo provides a JPG (that's way too high-res anyways), so you'll need `magick` to convert it (see [dependencies](#dependencies)).
-- `oplm`: The script will fetch cover art from OPL Manager's [latest art database](https://archive.org/details/OPLM_ART_2024_09) hosted on internet archive. Unlike xlenore's repo, this contains more than just the front cover for games, but I have yet to implement downloading those.
+Previously, I included the option to choose from two different art sources, each with their own shortcomings, and allowed users to choose which they wanted through a variable. I have since removed this feature because this new source I've found seems to be the best and suits all needs.
 
 ### Dependencies
 
 - `mkfs.ps2` is needed to create VMCs. It's part of the [ps2mcfs repo](https://github.com/FranciscoDA/ps2mcfs) made by [Francisco Altoe](http://github.com/FranciscoDA).
 - `bsdtar` is needed to extract the game ID from an ISO.
 - `curl` is needed to fetch the latest VMC group list and cover art for games.
-- `magick` is needed when using [`xlenore/ps2-covers`](https://github.com/xlenore/ps2-covers) as the art source, since it holds JPGs which need to be converted to PNGs. It is not necessary when using OPLM's ART DB.
 - `inotifywait` from `inotify-tools` is needed to actually check when a new file is added. It's not necessary if you plan to only [manually run the script](#running-manually) or [have found a different way to automate it](#working-with-non-systemd-and-non-linux-machines).
 - For parsing and bookkeeping, `mktemp`, `sed`, `awk` and `grep` are also used.
 
-By default, it is assumed that these commands all lie within your `PATH`. If that's not the case, define the `MKFS_PS2`, `BSDTAR`, `CURL`, `MAGICK` and `INOTIFYWAIT` variables to each command's absolute path. The rest of the commands must be in your `PATH`, and are not specifically checked for. Stuff might break if you somehow lack them.
+By default, it is assumed that these commands all lie within your `PATH`. If that's not the case, define the `MKFS_PS2`, `BSDTAR`, `CURL` and `INOTIFYWAIT` variables to each command's absolute path. The rest of the commands must be in your `PATH`, and are not specifically checked for. Stuff might break if you somehow lack them.
 
 ### Other defaults
 
@@ -122,7 +128,6 @@ If you replace `watch.sh` and the systemd unit then you can pretty easily get th
 
 ### Future plans
 
-- Support for other art assets provided by OPLM but not xlenore's repo
 - Handling config files for more game launchers
 - Better handling other changes to `CD/` and `DVD/` directories like renaming/deletion
 - Maybe cheats? But I have no experience with that and don't use cheats, let me know if that's something you want.
@@ -140,6 +145,6 @@ And then please be willing to test it out once I've worked on it.
 
 ### Misc. stuff
 
-Big thanks to [xlenore](https://github.com/xlenore), [Francisco Altoe](http://github.com/FranciscoDA) and the [OPL Manager](https://oplmanager.com/site/) for providing tools that this repo directly depends on. Thank you to [sync-on-luma](https://github.com/sync-on-luma) and everyone who contributed to the VMC group list on their repo. And thank you to all the creators of all the PS2 game loader frontends that I and many others rely on to keep this console alive and useful.
+Big thanks to [Luden](http://github.com/Luden02), [Francisco Altoe](http://github.com/FranciscoDA) and the [OPL Manager](https://oplmanager.com) for providing tools/resources that this repo directly depends on. Thank you to [sync-on-luma](https://github.com/sync-on-luma) and everyone who contributed to the VMC group list on their repo. And thank you to all the creators of all the PS2 game loader frontends that I and many others rely on to keep this console alive and useful.
 
 No AI has been used in this project, not that it really matters to me all too much. This is just a small project I did for fun and mainly for myself in my free time.
